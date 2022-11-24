@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "axios": "^1.2.0",
     "dayjs": "^1.11.6",
     "echarts": "^5.4.0",
     "rxjs": "^7.5.7"

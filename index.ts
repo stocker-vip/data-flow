@@ -11,6 +11,7 @@ import { LineChart, LineSeriesOption } from "echarts/charts";
 import { UniversalTransition } from "echarts/features";
 import { CanvasRenderer } from "echarts/renderers";
 import dayjs from "dayjs";
+import { flowCode } from "./index2";
 
 echarts.use([
 	GridComponent,
@@ -29,9 +30,8 @@ var myChart = echarts.init(chartDom);
 var option: EChartsOption;
 
 const code = getUrlPara("code") || "90.BK0425";
-
+flowCode(code);
 getData(code).then((it: any) => {
-	console.log(it);
 	option = {
 		xAxis: {
 			type: "category",
@@ -59,7 +59,7 @@ getData(code).then((it: any) => {
 });
 const items = async () => {
 	const data = await fetch(
-		"https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=500&po=1&np=1&fields=f12%2Cf13%2Cf14%2Cf62&fid=f62&fs=m%3A90%2Bt%3A2&ut=b2884a393a59ad64002292a3e90d46a5&_=1669140112756"
+		"https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=500&po=1&np=1&fields=f12%2Cf13%2Cf14%2Cf62&fid=f62&fs=m:90+t:3&ut=b2884a393a59ad64002292a3e90d46a5&_=1669140112756"
 	);
 	const d = await data.json();
 	console.log(d);
