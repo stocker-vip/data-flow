@@ -250,27 +250,33 @@ const d = data.map((it) => {
 
 export default d;
 
-const temp = [0, 0];
-export const d1 = d.map((it) => {
-	temp[0] += 1;
-	temp[1] += it[1];
-	return [dayjs(it[0] * 1000).format("HH:mm"), it[1]/(temp[1] / temp[0])];
-});
 
-type ResultData = [string,[string,number][]];
 
-export const getData = async (code:string):Promise<ResultData> => {
-    const data = await fetch(`http://push2delay.eastmoney.com/api/qt/stock/fflow/kline/get?lmt=1000&klt=1&fields1=f1,f2,f3&fields2=f51,f52&secid=${code}`)
-    const d = await data.json();
-    const temp = [0, 0];
-    const ddd = d.data.klines.map((it:string) => {
-        const [time, value] = it.split(",");
-        return [dayjs(time).unix(), Number(value)];
-    }).map((it: [number,number]) => {
-        temp[0] += 1;
-		const last = temp[1]
-        temp[1] = Math.abs(it[1]);
-        return [dayjs(it[0] * 1000).format("HH:mm"), Math.abs(Math.abs( temp[1] - last)/(Math.abs(it[1]) / temp[0]))];
-    });
-    return [d.data.name,ddd]
-}
+export type ResultData = [string, [string, number][]];
+
+export const getData = async (code: string): Promise<ResultData> => {
+	const temp = [0, 0];
+	const [name, d] = await getFlow(code);
+	const ddd = d.map<[string, number]>((it: [string, number]) => {
+		temp[0] += 1;
+		const last = temp[1];
+		temp[1] =it[1];
+		return [
+			it[0],
+			(temp[1] - last) / (temp[1] / temp[0] ),
+		];
+	});
+	return [name, ddd];
+};
+
+export const getFlow = async (code: string): Promise<ResultData> => {
+	const data = await fetch(
+		`http://push2delay.eastmoney.com/api/qt/stock/fflow/kline/get?lmt=1000&klt=1&fields1=f1,f2,f3&fields2=f51,f52&secid=${code}`
+	);
+	const d = await data.json();
+	const ddd = d.data.klines.map((it: string) => {
+		const [time, value] = it.split(",");
+		return [dayjs(time).format("HH:mm"), Number(value)];
+	});
+	return [d.data.name, ddd];
+};
