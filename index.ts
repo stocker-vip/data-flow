@@ -10,7 +10,6 @@ import {
 import { LineChart, LineSeriesOption } from "echarts/charts";
 import { UniversalTransition } from "echarts/features";
 import { CanvasRenderer } from "echarts/renderers";
-import dayjs from "dayjs";
 import { flowCode } from "./index2";
 import { maN, ud, up } from "./fn";
 
@@ -95,7 +94,7 @@ const setChart2 =
 
 const items = async () => {
 	const data = await fetch(
-		"https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=500&po=1&np=1&fields=f12%2Cf13%2Cf14%2Cf62&fid=f62&fs=m:90+t:2&ut=b2884a393a59ad64002292a3e90d46a5&_=1669140112756"
+		"https://push2.eastmoney.com/api/qt/clist/get?pn=1&pz=500&po=1&np=1&fields=f12%2Cf13%2Cf14%2Cf62&fid=f62&fs=m:90+t:2&ut=b2884a393a59ad64002292a3e90d46a5"
 	);
 	const d = await data.json();
 	d.data.diff.map((it: any) => {
@@ -116,10 +115,10 @@ const Ma5Flow = async (code: string) => {
 	const data = flow[1];
 	const flowData = data.map((it) => it[1]);
 	const category = data.map((it) => it[0]);
-	const ma = maN(20);
+	const ma = maN(6);
 	const ma5Flow = ma(ma(flowData));
 
-	if(up(ma5Flow.slice(0,5))){
+	if(up(ma5Flow.slice(0,20))){
 		console.log(name, 'up')
 	}
 
